@@ -14,13 +14,13 @@ jobs:
       
       - name: Build & Deploy
         env:
-            ID_RSA: ${{ secrets.SSH_ID_RSA }}
+            PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
             HOSTNAME: ${{ secrets.SSH_HOSTNAME }}
             USER_NAME: ${{ secrets.SSH_USER_NAME }}
      
         run: |
           # Create private key file
-          echo "$ID_RSA" > id_rsa
+          echo "$PRIVATE_KEY" > id_rsa
           chmod 600 id_rsa # Set the correct permissions
 
           # Start the SSH agent
