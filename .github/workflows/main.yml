@@ -32,7 +32,7 @@ jobs:
             set -e # Exit immediately if a command exits with a non-zero status
             
             # Navigate to application directory
-            cd /home/ubuntu/next-ec2-demo || exit
+            cd /home/ec2-user/next-ec2-demo || exit
 
             # Update package list and pull latest changes
             sudo yum update -y
