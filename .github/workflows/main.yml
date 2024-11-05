@@ -11,12 +11,25 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+      
       - name: Build & Deploy
         env:
-            PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+            ID_RSA: ${{ secrets.SSH_ID_RSA }}
             HOSTNAME: ${{ secrets.SSH_HOSTNAME }}
             USER_NAME: ${{ secrets.SSH_USER_NAME }}
      
-        run: |  
-          echo "$PRIVATE_KEY" > private_key && chmod 400 private_key
-          ssh -o StrictHostKeyChecking=no -i private_key $USER_NAME@$HOSTNAME 
+        run: |
+          # Create private key file
+          echo "$ID_RSA" > id_rsa
+          chmod 600 id_rsa # Set the correct permissions
+
+          # Start the SSH agent
+          eval "$(ssh-agent -s)"
+          ssh-add id_rsa # Add the private key to the agent
+
+          # Run your deployment commands
+          ssh -o StrictHostKeyChecking=no $USER_NAME@$HOSTNAME << 'EOF'
+            # Place your deployment commands here
+            echo "Deploying application..."
+            # Example: git pull, npm install, etc.
+          EOF
