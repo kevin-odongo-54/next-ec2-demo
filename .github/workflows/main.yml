@@ -29,7 +29,18 @@ jobs:
 
           # Run your deployment commands
           ssh -o StrictHostKeyChecking=no $USER_NAME@$HOSTNAME << 'EOF'
-            # Place your deployment commands here
-            echo "Deploying application..."
-            # Example: git pull, npm install, etc.
+            set -e # Exit immediately if a command exits with a non-zero status
+            
+            # Navigate to application directory
+            cd /home/ubuntu/next-ec2-demo || exit
+
+            # Update package list and pull latest changes
+            sudo yum update -y
+            sudo git pull origin main
+             
+            # Build the application
+            sudo npm run build
+
+            # Restart the application using PM2
+            sudo pm2 restart cabin-frontend
           EOF
